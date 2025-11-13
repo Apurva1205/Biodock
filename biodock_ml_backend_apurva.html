@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Apurva Chavan • ML & Python Backend Engineer for Biodock (W21)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-page: #020617;
+      --bg-gradient-1: #ecfeff;
+      --bg-gradient-2: #f9f5ff;
+      --bg-gradient-3: #fefce8;
+      --card: #ffffff;
+      --card-soft: #f9fafb;
+      --border-soft: #e5e7eb;
+      --accent: #0ea5e9; /* cyan/blue */
+      --accent-2: #22c55e; /* green */
+      --accent-3: #e11d48; /* pink/red */
+      --text-main: #020617;
+      --text-soft: #4b5563;
+      --text-muted: #6b7280;
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 55px rgba(15, 23, 42, 0.18);
+      --shadow-strong: 0 26px 80px rgba(15, 23, 42, 0.26);
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --transition-fast: 0.18s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+      background:
+        radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.18) 0, transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(248, 250, 252, 1) 0, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(244, 63, 94, 0.16) 0, transparent 55%),
+        linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3));
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 26px 16px 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    @media (max-width: 880px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-orb {
+      width: 52px;
+      height: 52px;
+      border-radius: 22px;
+      padding: 3px;
+      background: conic-gradient(from 140deg, #0ea5e9, #22c55e, #e11d48, #0ea5e9);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-orb-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 0, #f9fafb, #0f172a 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+
+    .brand-text-top {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+    }
+
+    .brand-text-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .brand-text-role {
+      font-size: 0.86rem;
+      color: var(--text-soft);
+    }
+
+    .brand-text-role span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+
+    nav a {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    nav a:hover {
+      background: #f1f5f9;
+      border-color: rgba(148, 163, 184, 0.9);
+      color: var(--text-main);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(148, 163, 184, 0.55);
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-main {
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.28), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(34, 197, 94, 0.18), transparent 60%),
+        rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: var(--shadow-strong);
+      padding: 18px 20px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.75rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .hero-pill.accent {
+      border-color: rgba(14, 165, 233, 0.9);
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(34, 197, 94, 0.05));
+      color: #0369a1;
+    }
+
+    .hero-title {
+      font-size: clamp(1.8rem, 3.1vw, 2.2rem);
+      margin: 2px 0 8px;
+      color: var(--text-main);
+    }
+
+    .hero-title span {
+      background: linear-gradient(120deg, #0ea5e9, #22c55e, #e11d48);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 700;
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      max-width: 580px;
+    }
+
+    .hero-sub strong {
+      color: var(--text-main);
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      font-size: 0.8rem;
+    }
+
+    .hero-stat {
+      flex: 1 1 120px;
+      border-radius: 18px;
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      background: rgba(248, 250, 252, 0.9);
+      padding: 8px 10px;
+    }
+
+    .hero-stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .hero-stat-value {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .hero-stat-value span {
+      font-size: 0.7rem;
+      color: var(--accent-2);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .hero-cta-row {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at 0 0, rgba(14, 165, 233, 0.5), #0f172a);
+      color: #ecfeff;
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.65);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 24px 55px rgba(15, 23, 42, 0.9);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(148, 163, 184, 0.9);
+      color: var(--text-soft);
+    }
+
+    .btn-secondary:hover {
+      background: #f9fafb;
+      border-color: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .hero-note {
+      color: var(--text-muted);
+    }
+
+    .hero-note span {
+      color: var(--accent-3);
+      font-weight: 500;
+    }
+
+    /* Microscope panel */
+    .hero-side {
+      border-radius: var(--radius-xl);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(30, 64, 175, 0.9);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 12px;
+      color: #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-side-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      margin-bottom: 6px;
+      color: #cbd5f5;
+    }
+
+    .hero-side-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+    }
+
+    .hero-side-pill {
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(96, 165, 250, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+      font-size: 0.72rem;
+    }
+
+    .hero-side-main {
+      border-radius: 18px;
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.4), transparent 60%),
+                  radial-gradient(circle at 100% 100%, rgba(244, 63, 94, 0.4), transparent 60%),
+                  #020617;
+      padding: 10px 11px 9px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #e5e7eb;
+      border: 1px solid rgba(30, 64, 175, 0.9);
+    }
+
+    .code-line {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+
+    .code-lineno {
+      width: 20px;
+      text-align: right;
+      opacity: 0.6;
+    }
+
+    .code-text {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .code-kw { color: #38bdf8; }
+    .code-fn { color: #a5b4fc; }
+    .code-num { color: #facc15; }
+    .code-str { color: #4ade80; }
+    .code-com { color: #9ca3af; }
+
+    .hero-side-footer {
+      margin-top: 6px;
+      font-size: 0.7rem;
+      color: #9ca3af;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 960px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    section {
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px 12px;
+    }
+
+    h2 {
+      font-size: 0.92rem;
+      margin: 0 0 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    h2 span {
+      width: 24px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0ea5e9, #22c55e, #e11d48);
+    }
+
+    .section-body {
+      font-size: 0.88rem;
+      color: var(--text-soft);
+    }
+
+    .section-body strong { color: var(--text-main); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 6px;
+      font-size: 0.78rem;
+    }
+
+    .chip {
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      background: var(--card-soft);
+      color: var(--text-muted);
+    }
+
+    .chip.highlight {
+      border-color: rgba(14, 165, 233, 0.9);
+      color: #0369a1;
+      background: #e0f2fe;
+    }
+
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+      font-size: 0.87rem;
+    }
+
+    .list li {
+      margin-bottom: 6px;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .list li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 0.72rem;
+      color: var(--accent);
+    }
+
+    .subheading {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      font-size: 0.84rem;
+    }
+
+    .project {
+      border-radius: 17px;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.12), transparent 65%),
+                  #ffffff;
+      padding: 9px 10px 9px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.1fr);
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 720px) {
+      .project {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .project-title {
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .project-title span {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+
+    .project-desc {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .project-tag {
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      background: #f9fafb;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .project-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 6px;
+      text-align: right;
+    }
+
+    .project-link {
+      padding: 5px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(14, 165, 233, 0.9);
+      color: #0f172a;
+      background: #e0f2fe;
+      font-size: 0.76rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .project-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
+      background: #bae6fd;
+      border-color: #0284c7;
+    }
+
+    .project-note {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* STACK */
+    .stack-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .stack-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+    }
+
+    .stack-pill {
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(209, 213, 219, 0.95);
+      background: #f9fafb;
+      color: var(--text-soft);
+    }
+
+    footer {
+      margin-top: 16px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="brand-orb"><div class="brand-orb-inner">AC</div></div>
+        <div>
+          <div class="brand-text-top">Tailored application • Biodock (W21)</div>
+          <div class="brand-text-name">Apurva Chavan</div>
+          <div class="brand-text-role">Machine Learning & <span>Python Backend Engineer</span></div>
+        </div>
+      </div>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#why-biodock">Why Biodock</a>
+        <a href="#how-help">How I can help</a>
+        <a href="#projects">Relevant GitHub</a>
+        <a href="#stack">Stack</a>
+        <a href="https://github.com/Apurva1205" target="_blank" rel="noopener">GitHub ↗</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="overview">
+      <div class="hero-main">
+        <div class="hero-pill-row">
+          <div class="hero-pill accent">Machine Learning & Python Backend Engineer</div>
+          <div class="hero-pill">Cloud AI microscopy automation</div>
+          <div class="hero-pill">Typed scientific Python • PyTorch • Image data</div>
+        </div>
+        <h1 class="hero-title">
+          Routing <span>microscopy & omics data</span> through reliable PyTorch + Python backends.
+        </h1>
+        <p class="hero-sub">
+          I’m a <strong>Python-first ML engineer</strong> with experience in <strong>PyTorch, data pipelines, and backend
+          services</strong>. I love building systems where <strong>image tensors, models, and cloud infrastructure</strong>
+          work together cleanly—exactly what Biodock needs to scale AI-driven analysis for labs.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-label">Role</div>
+            <div class="hero-stat-value">ML & Python Backend<span>Hands-on IC</span></div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-label">Data</div>
+            <div class="hero-stat-value">Image & Tabular<span>Numpy • SQL • CSV</span></div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-label">Environment</div>
+            <div class="hero-stat-value">Docker • AWS-ready<span>Mongo • Services</span></div>
+          </div>
+        </div>
+        <div class="hero-cta-row">
+          <a href="#how-help" class="btn btn-primary">See how I’d build with Biodock →</a>
+          <a href="#projects" class="btn btn-secondary">Jump to relevant projects</a>
+          <div class="hero-note">Mission alignment: <span>turn better models into faster cures, not just better demos.</span></div>
+        </div>
+      </div>
+
+      <aside class="hero-side">
+        <div class="hero-side-header">
+          <div class="hero-side-label">Pseudo-console • Microscopy batch</div>
+          <div class="hero-side-pill">typed Python • torch • numpy</div>
+        </div>
+        <div class="hero-side-main">
+          <div class="code-line"><div class="code-lineno">01</div><div class="code-text"><span class="code-kw">import</span> torch, numpy <span class="code-kw">as</span> np</div></div>
+          <div class="code-line"><div class="code-lineno">02</div><div class="code-text"><span class="code-kw">from</span> biodock.pipeline <span class="code-kw">import</span> load_tile_batch, run_models</div></div>
+          <div class="code-line"><div class="code-lineno">03</div><div class="code-text"><span class="code-com"># Backend service: fetch → normalize → infer → persist</span></div></div>
+          <div class="code-line"><div class="code-lineno">04</div><div class="code-text"><span class="code-kw">def</span> <span class="code-fn">process_batch</span>(batch_id: <span class="code-kw">str</span>) -&gt; <span class="code-kw">None</span>:</div></div>
+          <div class="code-line"><div class="code-lineno">05</div><div class="code-text">    tiles: np.ndarray = load_tile_batch(batch_id)</div></div>
+          <div class="code-line"><div class="code-lineno">06</div><div class="code-text">    tensor = torch.from_numpy(tiles).float() / <span class="code-num">255.0</span></div></div>
+          <div class="code-line"><div class="code-lineno">07</div><div class="code-text">    logits, embeddings = run_models(tensor.to(<span class="code-str">"cuda"</span>))</div></div>
+          <div class="code-line"><div class="code-lineno">08</div><div class="code-text">    <span class="code-com"># Send to Mongo / SQL for post-hoc analysis & UX</span></div></div>
+          <div class="code-line"><div class="code-lineno">09</div><div class="code-text">    persist_results(batch_id=batch_id, logits=logits, features=embeddings)</div></div>
+          <div class="code-line"><div class="code-lineno">10</div><div class="code-text">    log_batch_finished(batch_id)</div></div>
+        </div>
+        <div class="hero-side-footer">
+          <div>How I think: clear data contracts, well-typed flows, transparent logging.</div>
+          <div>Goal: make every image pass reproducible & debuggable.</div>
+        </div>
+      </aside>
+    </section>
+
+    <main>
+      <div>
+        <section id="why-biodock">
+          <h2><span></span> Why Biodock resonates</h2>
+          <div class="section-body">
+            <p>
+              Biodock sits at a perfect intersection of what I care about:
+              <strong>practical deep learning, strong Python engineering, and real scientific impact</strong>.
+              I’m especially drawn to the idea that improving backend + ML infra directly accelerates
+              <strong>disease understanding and treatment</strong>.
+            </p>
+            <div class="subheading">What excites me technically</div>
+            <ul class="list">
+              <li>
+                A stack that matches my strengths: <strong>typed scientific Python (NumPy), PyTorch, Docker,
+                AWS, Mongo, and data-heavy services</strong> instead of toy apps.
+              </li>
+              <li>
+                Working close to <strong>image tensors and NGS-like data</strong> – building clean data flows that let
+                scientists plug in new models without wrestling compute every time.
+              </li>
+              <li>
+                The expectation of <strong>batch jobs + backend services</strong> instead of one-off notebooks.
+              </li>
+            </ul>
+            <div class="subheading">What excites me mission-wise</div>
+            <ul class="list">
+              <li>
+                Giving the platform to <strong>academic scientists free</strong> is exactly the kind of alignment I like:
+                commercial success that still pushes open science forward.
+              </li>
+              <li>
+                The chance to see my work show up as <strong>faster experiment cycles and better cellular insights</strong>
+                for BioR&amp;D teams.
+              </li>
+            </ul>
+            <div class="chips">
+              <div class="chip highlight">Bio AI with real-world users</div>
+              <div class="chip">From notebook experiments → production pipelines</div>
+              <div class="chip">Impact measured in experiments, not clicks</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="how-help">
+          <h2><span></span> How I can help Biodock</h2>
+          <div class="section-body">
+            <div class="subheading">Backend & ML data flow</div>
+            <ul class="list">
+              <li>
+                <strong>Design and maintain Python services</strong> that move microscopy tiles / image volumes from
+                storage → preprocessing → model inference → results stores (Mongo / SQL) safely and predictably.
+              </li>
+              <li>
+                Work with <strong>NumPy arrays and PyTorch tensors</strong> daily—normalization, tiling, batching,
+                and post-processing logits/embeddings for downstream analysis.
+              </li>
+              <li>
+                Implement <strong>batch jobs</strong> for large-scale inference, with progress tracking and robust
+                logging so labs can trust the outputs.
+              </li>
+            </ul>
+
+            <div class="subheading">Performance & scalability</div>
+            <ul class="list">
+              <li>
+                Optimize <strong>CPU/GPU usage</strong> (batch sizes, mixed precision, prefetching), especially when
+                streaming from S3-like object stores.
+              </li>
+              <li>
+                Collaborate with infra to keep <strong>Docker images lean</strong>, services healthy, and deployment
+                pipelines smooth.
+              </li>
+            </ul>
+
+            <div class="subheading">Product collaboration</div>
+            <ul class="list">
+              <li>
+                Translate scientist feedback into <strong>backend changes</strong>: new endpoints, extra metadata fields,
+                tweak-able thresholds, or model-switching logic.
+              </li>
+              <li>
+                Be comfortable talking about <strong>tradeoffs</strong> (speed vs. accuracy, resolution vs. throughput)
+                in plain language.
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <section id="projects">
+          <h2><span></span> Relevant GitHub projects</h2>
+          <div class="section-body">
+            <p style="margin-top:0;margin-bottom:6px;">
+              A few public repos from <code style="font-family:var(--font-mono);">Apurva1205</code> that show how I
+              work with <strong>ML, data pipelines, and scientific-style problems</strong>.
+            </p>
+            <div class="projects-grid">
+              <article class="project">
+                <div>
+                  <div class="project-title">Time-Series-Forecasting-For-Energy-Consumption <span>(ML + pipelines)</span></div>
+                  <p class="project-desc">
+                    Built a full workflow to forecast energy usage using ML models. Involves data cleaning, feature
+                    engineering, training, and evaluation—mirrors how I’d treat lab / experiment metadata streams.
+                  </p>
+                  <div class="project-tags">
+                    <span class="project-tag">Python</span>
+                    <span class="project-tag">ML</span>
+                    <span class="project-tag">Time series</span>
+                  </div>
+                </div>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/Apurva1205/Time-Series-Forecasting-For-Energy-Consumption" target="_blank" rel="noopener">View repo ↗</a>
+                  <div class="project-note">Shows comfort with data-heavy pipelines and evaluation.</div>
+                </div>
+              </article>
+
+              <article class="project">
+                <div>
+                  <div class="project-title">Heat-Diffusion-Visualization <span>(numerical & scientific vibes)</span></div>
+                  <p class="project-desc">
+                    Simulates and visualizes heat diffusion—working with arrays, grids, and numerical methods. The
+                    same instincts carry over to <strong>image processing and spatial reasoning</strong>.
+                  </p>
+                  <div class="project-tags">
+                    <span class="project-tag">Python</span>
+                    <span class="project-tag">NumPy</span>
+                    <span class="project-tag">Scientific computing</span>
+                  </div>
+                </div>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/Apurva1205/Heat-Diffusion-Visualization" target="_blank" rel="noopener">View repo ↗</a>
+                  <div class="project-note">Highlights comfort with array-based thinking.</div>
+                </div>
+              </article>
+
+              <article class="project">
+                <div>
+                  <div class="project-title">Spaceship-Titanic <span>(tabular ML)</span></div>
+                  <p class="project-desc">
+                    Classic structured-data ML project: cleaning, encoding, training and tuning models on tabular data.
+                    Mirrors how I’d treat experiment logs, NGS runs, or plate metadata.
+                  </p>
+                  <div class="project-tags">
+                    <span class="project-tag">Python</span>
+                    <span class="project-tag">Pandas</span>
+                    <span class="project-tag">Classification</span>
+                  </div>
+                </div>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/Apurva1205/Spaceship-Titanic" target="_blank" rel="noopener">View repo ↗</a>
+                  <div class="project-note">Relevant for handling lab / sample-level tabular data.</div>
+                </div>
+              </article>
+
+              <article class="project">
+                <div>
+                  <div class="project-title">AI-RESUME-ENHANCER & Text-Classification <span>(production-ish ML)</span></div>
+                  <p class="project-desc">
+                    End-to-end pipelines from raw text → cleaned data → models → scoring & reporting. The
+                    <strong>"pipeline mindset"</strong> maps well to microscopy batches and analysis runs.
+                  </p>
+                  <div class="project-tags">
+                    <span class="project-tag">PyTorch / ML</span>
+                    <span class="project-tag">NLP</span>
+                    <span class="project-tag">Evaluation</span>
+                  </div>
+                </div>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/Apurva1205/AI-RESUME-ENHANCER" target="_blank" rel="noopener">AI-RESUME-ENHANCER ↗</a>
+                  <a class="project-link" href="https://github.com/Apurva1205/Text-Classification" target="_blank" rel="noopener">Text-Classification ↗</a>
+                  <div class="project-note">Demonstrates comfort building and iterating on ML backends.</div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="stack">
+          <h2><span></span> Stack & experience</h2>
+          <div class="section-body">
+            <p style="margin-top:0;">
+              I match Biodock’s expectations for a <strong>Machine Learning & Python Backend Engineer</strong> who can
+              think in tensors, services, and experiments at the same time.
+            </p>
+            <div class="stack-rows">
+              <div class="stack-row">
+                <span class="stack-label">Languages</span>
+                <span class="stack-pill">Python 3 (primary)</span>
+                <span class="stack-pill">Strong with NumPy & Pandas</span>
+                <span class="stack-pill">Some JS/TS exposure</span>
+              </div>
+              <div class="stack-row">
+                <span class="stack-label">ML / DL</span>
+                <span class="stack-pill">PyTorch</span>
+                <span class="stack-pill">Scikit-learn</span>
+                <span class="stack-pill">Experimentation & evaluation</span>
+              </div>
+              <div class="stack-row">
+                <span class="stack-label">Data</span>
+                <span class="stack-pill">Image-like arrays</span>
+                <span class="stack-pill">Tabular (CSV, SQL)</span>
+                <span class="stack-pill">Mongo-style documents</span>
+              </div>
+              <div class="stack-row">
+                <span class="stack-label">Backend</span>
+                <span class="stack-pill">Python services & batch jobs</span>
+                <span class="stack-pill">Docker & cloud-ready thinking</span>
+                <span class="stack-pill">Logging & monitoring mindset</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      Crafted by Apurva Chavan specifically for the <strong>Machine Learning & Python Backend Engineer</strong> role at Biodock (W21). GitHub: <a href="https://github.com/Apurva1205" target="_blank" rel="noopener">Apurva1205</a>
+    </footer>
+  </div>
+</body>
+</html>
